@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CityInfo from "./CityInfo";
+import axios from "axios";
 
 function App() {
 	const api = {
@@ -9,24 +10,46 @@ function App() {
 
 	const [query, setQuery] = useState("");
 	const [weather, setWeather] = useState("");
+	const [error, setError] = useState(false);
+
+	// const fetchWeather = async (city = "minsk") => {
+	// 	await fetch(`${api.url}weather?q=${city}&units=metric&appid=${api.key}`)
+	// 		.then((res) => res.json())
+	// 		.then((result) => setWeather(result))
+	// 		.catch((e) => console.log(e));
+	// 	setQuery("");
+	// };
+
+	const axiosGetWeather = (city = "minsk") => {
+		axios
+			.get(`${api.url}weather?q=${city}&units=metric&appid=${api.key}`)
+			.then((res) => {
+				console.log(res);
+				setError(false);
+				setWeather(res.data);
+				setQuery("");
+			})
+			.catch(setError(true));
+	};
 
 	useEffect(() => {
-		fetch(`${api.url}weather?q=minsk&units=metric&appid=${api.key}`)
-			.then((res) => res.json())
-			.then((result) => setWeather(result))
-			.catch((e) => console.log(e));
-		setQuery("");
+		axiosGetWeather();
 	}, []);
 
-	const search = async (e) => {
+	// useEffect(() => {
+	// 	fetch(`${api.url}weather?q=minsk&units=metric&appid=${api.key}`)
+	// 		.then((res) => res.json())
+	// 		.then((result) => setWeather(result))
+	// 		.catch((e) => console.log(e));
+	// 	setQuery("");
+	// }, []);
+	// useEffect(() => {
+	// 	fetchWeather();
+	// }, []);
+
+	const search = (e) => {
 		if (e.key === "Enter") {
-			await fetch(
-				`${api.url}weather?q=${query}&units=metric&appid=${api.key}`
-			)
-				.then((res) => res.json())
-				.then((result) => setWeather(result))
-				.catch((e) => console.log(e));
-			setQuery("");
+			axiosGetWeather(query);
 		}
 	};
 
@@ -64,7 +87,10 @@ function App() {
 	};
 
 	return (
-		<div className={weather? (weather.main.temp > 10 ? 'app warm' : 'app') : 'app'}>
+		<div
+			className={
+				weather ? (weather.main.temp > 10 ? "app warm" : "app") : "app"
+			}>
 			<main className=''>
 				<div className='search-box'>
 					<input
@@ -76,7 +102,9 @@ function App() {
 						placeholder='Search....'
 					/>
 				</div>
-				{weather ? (
+				{error ? (
+					<h1 className='location'>Error city. Enter right city</h1>
+				) : weather ? (
 					<CityInfo
 						name={weather.name}
 						country={weather.sys.country}
