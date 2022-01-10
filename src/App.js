@@ -36,17 +36,6 @@ function App() {
 		axiosGetWeather();
 	}, []);
 
-	// useEffect(() => {
-	// 	fetch(`${api.url}weather?q=minsk&units=metric&appid=${api.key}`)
-	// 		.then((res) => res.json())
-	// 		.then((result) => setWeather(result))
-	// 		.catch((e) => console.log(e));
-	// 	setQuery("");
-	// }, []);
-	// useEffect(() => {
-	// 	fetchWeather();
-	// }, []);
-
 	const search = (e) => {
 		if (e.key === "Enter") {
 			axiosGetWeather(query);
@@ -103,7 +92,7 @@ function App() {
 					/>
 				</div>
 				{error ? (
-					<h1 className='location'>Error city. Enter right city</h1>
+					<h1 className='location'>Wrong city name. Enter right city</h1>
 				) : weather ? (
 					<CityInfo
 						name={weather.name}
