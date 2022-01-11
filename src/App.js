@@ -12,14 +12,6 @@ function App() {
 	const [weather, setWeather] = useState("");
 	const [error, setError] = useState(false);
 
-	// const fetchWeather = async (city = "minsk") => {
-	// 	await fetch(`${api.url}weather?q=${city}&units=metric&appid=${api.key}`)
-	// 		.then((res) => res.json())
-	// 		.then((result) => setWeather(result))
-	// 		.catch((e) => console.log(e));
-	// 	setQuery("");
-	// };
-
 	const axiosGetWeather = (city = "minsk") => {
 		axios
 			.get(`${api.url}weather?q=${city}&units=metric&appid=${api.key}`)
